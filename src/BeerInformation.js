@@ -1,6 +1,5 @@
-async function getBeers(page, per_page, params) {
+async function getBeers(page, per_page) {
         const urlParams = new URLSearchParams({
-            ...params,
             page: page,
             per_page: per_page
         });
@@ -16,6 +15,4 @@ async function getBeers(page, per_page, params) {
             console.log("Error fetching beers: ", error);
         }
     }
-
-
 export default getBeers;
