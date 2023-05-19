@@ -1,4 +1,4 @@
-function PageExplorer({pageNumber}){
+function PageExplorer({pageNumber,handlePrev,handleNext}){
     
     return(
         <div className="page-explorer">

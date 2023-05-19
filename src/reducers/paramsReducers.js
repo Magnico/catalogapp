@@ -5,45 +5,39 @@ const INITIAL_STATE = {
     sort: "name"
 }
 
+function updateURL(page, per_page, sort){
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('page', page);
+    urlParams.set('per_page', per_page);
+    urlParams.set('sort', sort);
+    window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+}
 function paramsReducer (state, actions) {
     switch(actions.type){
         case 'NEXT_PAGE':
-            
+            updateURL(state.next, state.per_page, state.sort)
             return {
                 ...state,
                 page: state.next,
                 next: state.next + 1,
             }
         case 'PREV_PAGE':
+            updateURL(state.page - 1, state.per_page, state.sort)
             return {
                 ...state,
                 page: state.page - 1,
                 next: state.next - 1,
             }
-        case 'SET_PAGE':
-            return {
-                ...state,
-                page: actions.payload,
-                next: actions.payload + 1,
-            }
-        case 'SET_PER_PAGE':
-            return {
-                ...state,
-                per_page: actions.payload,
-            }
         case 'SET_PARAMS':
+            updateURL(actions.payload.page, actions.payload.per_page, actions.payload.sort)
             return {
                 page: actions.payload.page,
                 next: actions.payload.next,
                 per_page: actions.payload.per_page,
                 sort: actions.payload.sort,
             }
-        case 'SET_ORDER':
-            return {
-                ...state,
-                sort: actions.payload,
-            }
         default:
+            alert('Error: paramsReducer')
             return state
     }
 }

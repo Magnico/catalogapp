@@ -26,7 +26,7 @@ function ParamBar({ per_page, order, page }) {
             onChange={(e) => setNumber(e.target.value)}
           />
           <input type="hidden" name="page" value={page} />
-          <button type="submit">Reload</button>
+          <button type="submit">Apply</button>
         </form>
       </div>
   );

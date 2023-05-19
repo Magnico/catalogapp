@@ -4,7 +4,7 @@ import ParamBar from "./components/ParamBar.jsx";
 import PageExplorer from "./components/PageExplorer.jsx";
 import getBeers from "./BeerInformation.js";
 import { paramsReducer, INITIAL_STATE } from "./reducers/paramsReducers";
-import Catalog from "./components/Card.jsx";
+import Catalog from "./components/Catalog.jsx";
 
 function App() {
   const [beers, setBeers] = useState([]);
