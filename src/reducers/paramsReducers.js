@@ -6,12 +6,13 @@ const INITIAL_STATE = {
 }
 
 function updateURL(page, per_page, sort){
-    const urlParams = new URLSearchParams(window.location.search);
-    urlParams.set('page', page);
-    urlParams.set('per_page', per_page);
-    urlParams.set('sort', sort);
-    window.history.replaceState({}, '', `${window.location.pathname}?${urlParams}`);
+    const url = new URL(window.location.href);
+    url.searchParams.set('page', page);
+    url.searchParams.set('per_page', per_page);
+    url.searchParams.set('sort', sort);
+    window.history.replaceState({}, '', `${url.toString()}`);
 }
+
 function paramsReducer (state, actions) {
     switch(actions.type){
         case 'NEXT_PAGE':

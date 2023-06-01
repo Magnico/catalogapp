@@ -2,7 +2,7 @@ import "./App.css";
 import { useState, useEffect, useRef, useReducer } from "react";
 import ParamBar from "./components/ParamBar.jsx";
 import PageExplorer from "./components/PageExplorer.jsx";
-import getBeers from "./BeerInformation.js";
+import {getBeers} from "./utils/BeerInformation.js";
 import { paramsReducer, INITIAL_STATE } from "./reducers/paramsReducers";
 import Catalog from "./components/Catalog.jsx";
 
@@ -11,13 +11,18 @@ function App() {
   const [params, setParams] = useReducer(paramsReducer, INITIAL_STATE);
 
   useEffect(() => {
-    let urlParams = new URLSearchParams(window.location.search);
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlSearch = {
+      sort: urlParams.get("sort"),
+      page: urlParams.get("page"),
+      per_page: urlParams.get("per_page"),
+    };
 
     let newParams = {
-      page: urlParams.get("page") ? urlParams.get("page") : 1,
-      next: urlParams.get("page") ? Number(urlParams.get("page")) + 1 : 2,
-      per_page: urlParams.get("per_page") ? urlParams.get("per_page") : 10,
-      sort: urlParams.get("sort") ? urlParams.get("sort") : "name",
+      page: urlSearch.page ? urlSearch.page : 1,
+      next: urlSearch.page ? urlSearch.page + 1 : 2,
+      per_page: urlSearch.per_page ? urlSearch.per_page : 10,
+      sort: urlSearch.sort ? urlSearch.sort : "name",
     };
 
     setParams({
@@ -25,7 +30,6 @@ function App() {
       payload: newParams,
     });
 
-    fetchBeers();
   }, []);
 
   useEffect(() => {
@@ -34,31 +38,11 @@ function App() {
 
   const fetchBeers = async () => {
     try {
-      const response = await getBeers(params.page, params.per_page);
-      orderResult(response, params.sort);
+      const response = await getBeers(params.page, params.per_page, params.sort);
+      setBeers(response);
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const orderResult = (result, order) => {
-    if (order.includes("name")) {
-      result.sort((a, b) => {
-        if (a.name > b.name) return 1;
-        else if (a.name < b.name) return -1;
-        else return 0;
-      });
-    } else if (order.includes("date")) {
-      result.sort((a, b) => {
-        const dateA = new Date(a.first_brewed.split("/").reverse().join("/"));
-        const dateB = new Date(b.first_brewed.split("/").reverse().join("/"));
-        return dateA - dateB;
-      });
-    } else {
-      console.log("No valid sorting option provided");
-      return;
-    }
-    setBeers(order.includes("-") ? result.reverse() : result);
   };
 
   return (
